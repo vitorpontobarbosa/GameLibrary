@@ -1,6 +1,10 @@
-﻿using GameLibrary.Api.Models;
+﻿using AutoMapper;
+using GameLibrary.Api.DTOs.Games;
+using GameLibrary.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 namespace GameLibrary.Api.Controllers
@@ -10,11 +14,15 @@ namespace GameLibrary.Api.Controllers
     public class GamesController : ControllerBase
     {
         private readonly GameContext _context;
+        private readonly IMapper _mapper;
 
-        public GamesController(GameContext context)
+
+        public GamesController(GameContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
+
 
         // GET: api/games
         [HttpGet]
@@ -35,12 +43,15 @@ namespace GameLibrary.Api.Controllers
             return Ok(game);
         }
 
-        // GET: api/games/owner/1
-        [HttpGet("owner/{ownerId}")]
-        public async Task<IActionResult> GetByOwnerId(int ownerId)
+        // GET: api/games/me
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMyGames()
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             var games = await _context.Games
-                .Where(g => g.OwnerId == ownerId)
+                .Where(g => g.OwnerId == userId)
                 .ToListAsync();
 
             return Ok(games);
@@ -49,47 +60,63 @@ namespace GameLibrary.Api.Controllers
 
         // POST: api/games
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Game game)
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
         {
-            // Simulando um usuário fixo (ex: ID = 1)
-            game.OwnerId = 1;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var game = _mapper.Map<Game>(request);
+            game.OwnerId = userId;
 
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = game.Id }, game);
+            var response = _mapper.Map<GameResponse>(game);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = game.Id }, response);
         }
+
 
         // PUT: api/games/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Game updatedGame)
+        [Authorize]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateGameRequest request)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var existingGame = await _context.Games.FindAsync(id);
 
             if (existingGame == null)
                 return NotFound();
 
-            // Atualiza apenas os campos que podem ser modificados
-            existingGame.Name = updatedGame.Name;
-            existingGame.Studio = updatedGame.Studio;
-            existingGame.CoverImageUrl = updatedGame.CoverImageUrl;
-            existingGame.Price = updatedGame.Price;
-            existingGame.Description = updatedGame.Description;
-            existingGame.SteamLink = updatedGame.SteamLink;
+            if (existingGame.OwnerId != userId)
+                return Forbid();
 
+            // Atualiza os campos com base no DTO
+            _mapper.Map(request, existingGame);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
+
         // DELETE: api/games/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
+            var game = await _context.Games.FindAsync(id);
             if (game == null)
                 return NotFound();
+
+            if (game.OwnerId != userId)
+                return Forbid();
 
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
