@@ -44,16 +44,17 @@ namespace GameLibrary.Api.Controllers
         /// <summary>Retorna um jogo com base no ID.</summary>
         /// <response code="200">jogo retornado com sucesso</response>
         /// <response code ="404">Nenhum jogo encontrado</response>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
+        [HttpGet("{id}", Name = "GetGameById")]
+        [ProducesResponseType(typeof(GameResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetGameById(int id)
         {
             var game = await _context.Games.FindAsync(id);
             if (game == null)
                 return NotFound();
 
-            return Ok(game);
+            var response = _mapper.Map<GameResponse>(game);
+            return Ok(response);
         }
 
         // GET: api/games/me
@@ -82,7 +83,7 @@ namespace GameLibrary.Api.Controllers
         /// <response code="400">Dados inválidos</response>
         [HttpPost]
         [Authorize]
-        [ProducesResponseType(typeof(List<Game>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GameResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
         {
@@ -98,7 +99,7 @@ namespace GameLibrary.Api.Controllers
             await _context.SaveChangesAsync();
 
             var response = _mapper.Map<GameResponse>(game);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = game.Id }, response);
+            return CreatedAtRoute(nameof(GetGameById), new { id = game.Id }, response);
         }
 
 

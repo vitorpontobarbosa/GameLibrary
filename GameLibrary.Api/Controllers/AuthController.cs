@@ -53,10 +53,13 @@ namespace GameLibrary.Api.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var response = _mapper.Map<RegisterResponse>(user);
-            var token = GenerateToken(user);
+            var response = new RegisterResponse
+            {
+                Message = "Usuário criado com sucesso!",
+                Token = GenerateToken(user)
+            };
 
-            return Ok(new { message = "Usuário criado com sucesso!", token, user = response });
+            return Ok(response);
         }
 
         ///<summary>Realiza o login do usuário</summary>
@@ -79,10 +82,13 @@ namespace GameLibrary.Api.Controllers
             if (user == null)
                 return Unauthorized("Usuário ou senha inválidos.");
 
-            var response = _mapper.Map<LoginResponse>(user);
-            var token = GenerateToken(user);
+            var response = new LoginResponse { 
+                Message = "Login realizado com sucesso!",
+                Token = GenerateToken(user)
 
-            return Ok(new { token, user = response });
+            };
+            
+            return Ok(response);
         }
 
         private string GenerateToken(User user)
