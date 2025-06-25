@@ -1,29 +1,38 @@
-﻿using GameLibrary.Api.DTOs.Auth;
+﻿using AutoMapper;
+using GameLibrary.Api.DTOs.Auth;
 using GameLibrary.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AutoMapper;
 
 namespace GameLibrary.Api.Controllers
 {
+    /// <summary>
+    /// Endpoints relacionados ao usuario.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly GameContext _context;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(GameContext context, IMapper mapper)
+        public AuthController(GameContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
+        /// <summary>Registra Usuario</summary>
+        /// <response code="200">Usuário criado com sucesso</response>
+        /// <response code="400">Dados inválidos ou usuário já existe</response>
         [HttpPost("register")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status200OK)]
@@ -50,6 +59,10 @@ namespace GameLibrary.Api.Controllers
             return Ok(new { message = "Usuário criado com sucesso!", token, user = response });
         }
 
+        ///<summary>Realiza o login do usuário</summary>
+        ///<response code="200">Login realizado com sucesso</response>
+        ///<response code="401">Usuário ou senha inválidos</response>
+        ///<response code="400">Dados inválidos</response>
         [HttpPost("login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
@@ -76,17 +89,23 @@ namespace GameLibrary.Api.Controllers
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
+                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-secreta-123456"));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)
+            );
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: creds);
+                signingCredentials: creds
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

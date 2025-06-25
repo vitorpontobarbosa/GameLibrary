@@ -9,6 +9,9 @@ using System.Security.Claims;
 
 namespace GameLibrary.Api.Controllers
 {
+    /// <summary>
+    /// Endpoints relacionados aos jogos da biblioteca.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class GamesController : ControllerBase
@@ -25,6 +28,9 @@ namespace GameLibrary.Api.Controllers
 
 
         // GET: api/games
+        /// <summary>Retorna todos os jogos registrados</summary>
+        /// <response code="200">Lista de jogos retornada com sucesso</response>
+        /// <response code ="404">Nenhum jogo encontrado</response>
         [HttpGet]
         [ProducesResponseType(typeof(List<Game>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -35,6 +41,9 @@ namespace GameLibrary.Api.Controllers
         }
 
         // GET: api/games/1
+        /// <summary>Retorna um jogo com base no ID.</summary>
+        /// <response code="200">jogo retornado com sucesso</response>
+        /// <response code ="404">Nenhum jogo encontrado</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,6 +57,9 @@ namespace GameLibrary.Api.Controllers
         }
 
         // GET: api/games/me
+        /// <summary>Retorna todos os jogos do usuário.</summary>
+        /// <response code="200">Lista de jogos retornada com sucesso</response>
+        /// <response code ="404">Nenhum jogo encontrado</response>
         [HttpGet("me")]
         [Authorize]
         [ProducesResponseType(typeof(List<Game>), StatusCodes.Status200OK)]
@@ -65,11 +77,13 @@ namespace GameLibrary.Api.Controllers
 
 
         // POST: api/games
+        /// <summary>Cria jogo.</summary>
+        /// <response code="200">Jogo Criado com sucesso</response>
+        /// <response code="400">Dados inválidos</response>
         [HttpPost]
         [Authorize]
         [ProducesResponseType(typeof(List<Game>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
         {
             if (!ModelState.IsValid)
@@ -80,9 +94,6 @@ namespace GameLibrary.Api.Controllers
             var game = _mapper.Map<Game>(request);
             game.OwnerId = userId;
 
-            if (game.OwnerId != userId)
-                return Forbid();
-
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
 
@@ -92,6 +103,10 @@ namespace GameLibrary.Api.Controllers
 
 
         // PUT: api/games/5
+        /// <summary>Atualiza jogo.</summary>
+        /// <response code="200">Jogo atualizado com sucesso</response>
+        /// <response code="400">Dados inválidos</response>
+        /// <response code="403">Usuário não autorizado</response>
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType(typeof(List<Game>), StatusCodes.Status200OK)]
@@ -121,9 +136,13 @@ namespace GameLibrary.Api.Controllers
 
 
         // DELETE: api/games/5
+        /// <summary>Deleta jogo.</summary>
+        /// <response code="204">Jogo deletado com sucesso</response>
+        /// <response code="404">Jogo não encontrado</response>
+        /// <response code="403">Usuário não autorizado</response>
         [HttpDelete("{id}")]
         [Authorize]
-        [ProducesResponseType(typeof(List<Game>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<Game>), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete(int id)
