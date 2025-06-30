@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; // <-- necessário para configurar segurança no Swagger
 using System.Reflection;
 using System.Text;
+using GameLibrary.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,10 +44,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<GameContext>(options =>
+builder.Services.AddDbContext<GameLibrary.Api.Data.GameContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<GameLibrary.Api.Repositories.IGameRepository, GameLibrary.Api.Repositories.GameRepository>();
+builder.Services.AddScoped<GameLibrary.Api.Services.IGameService, GameLibrary.Api.Services.GameService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSettings["Key"];

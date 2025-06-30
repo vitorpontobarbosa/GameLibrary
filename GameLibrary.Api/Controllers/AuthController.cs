@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using GameLibrary.Api.DTOs.Auth;
 using GameLibrary.Api.Models;
+using GameLibrary.Api.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using GameLibrary.Api.Data;
 
 namespace GameLibrary.Api.Controllers
 {
@@ -19,11 +20,11 @@ namespace GameLibrary.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly GameContext _context;
+        private readonly GameLibrary.Api.Data.GameContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public AuthController(GameContext context, IMapper mapper, IConfiguration configuration)
+        public AuthController(GameLibrary.Api.Data.GameContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
