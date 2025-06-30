@@ -25,7 +25,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test GameLibrary.Tests/GameLibrary.Tests.csproj --logger trx
 
       - name: Publish
         run: dotnet publish -c Release -o ./publish
@@ -33,7 +33,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: <GameLibrary>
+          app-name: GameLibrary
           slot-name: Production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: ./publish
