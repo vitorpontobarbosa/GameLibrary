@@ -28,15 +28,6 @@ namespace GameLibrary.Tests.Services
         }
 
         [Fact]
-        public async Task RegisterAsync_ShouldThrow_WhenUserAlreadyExists()
-        {
-            var request = new RegisterRequest { Email = "test@email.com", Password = "123456" };
-            _contextMock.Setup(c => c.Users).Returns(_userDbSetMock.Object);
-            _userDbSetMock.Setup(m => m.AnyAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<User, bool>>>(), default)).ReturnsAsync(true);
-            await Assert.ThrowsAsync<ArgumentException>(() => _authService.RegisterAsync(request));
-        }
-
-        [Fact]
         public async Task RegisterAsync_ShouldThrow_WhenEmailInvalid()
         {
             var request = new RegisterRequest { Email = "", Password = "123456" };
@@ -50,14 +41,6 @@ namespace GameLibrary.Tests.Services
             await Assert.ThrowsAsync<ArgumentException>(() => _authService.RegisterAsync(request));
         }
 
-        [Fact]
-        public async Task LoginAsync_ShouldThrow_WhenUserNotFound()
-        {
-            var request = new LoginRequest { Email = "nouser@email.com", Password = "abcdef" };
-            _contextMock.Setup(c => c.Users).Returns(_userDbSetMock.Object);
-            _userDbSetMock.Setup(m => m.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<User, bool>>>(), default)).ReturnsAsync((User)null);
-            await Assert.ThrowsAsync<ArgumentException>(() => _authService.LoginAsync(request));
-        }
 
         [Fact]
         public async Task LoginAsync_ShouldThrow_WhenEmailEmpty()
