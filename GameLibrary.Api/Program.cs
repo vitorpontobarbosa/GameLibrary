@@ -50,6 +50,7 @@ builder.Services.AddDbContext<GameLibrary.Api.Data.GameContext>(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<GameLibrary.Api.Repositories.IGameRepository, GameLibrary.Api.Repositories.GameRepository>();
 builder.Services.AddScoped<GameLibrary.Api.Services.IGameService, GameLibrary.Api.Services.GameService>();
+builder.Services.AddScoped<GameLibrary.Api.Services.IAuthService, GameLibrary.Api.Services.AuthService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSettings["Key"];

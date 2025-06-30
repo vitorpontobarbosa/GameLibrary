@@ -40,6 +40,18 @@ namespace GameLibrary.Api.Services
 
         public async Task<GameResponse> CreateAsync(CreateGameRequest request, int userId)
         {
+            // Validação: Name obrigatório, min 3
+            if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length < 3)
+                throw new ArgumentException("O nome do jogo é obrigatório e deve ter pelo menos 3 caracteres.");
+
+            // Validação: CoverImageUrl obrigatório
+            if (string.IsNullOrWhiteSpace(request.CoverImageUrl))
+                throw new ArgumentException("A URL da capa é obrigatória.");
+
+            // Validação: Description obrigatório, min 10
+            if (string.IsNullOrWhiteSpace(request.Description) || request.Description.Length < 10)
+                throw new ArgumentException("A descrição é obrigatória e deve ter pelo menos 10 caracteres.");
+
             var game = _mapper.Map<Game>(request);
             game.OwnerId = userId;
             await _repository.AddAsync(game);
@@ -52,6 +64,19 @@ namespace GameLibrary.Api.Services
             var game = await _repository.GetByIdAsync(id);
             if (game == null || game.OwnerId != userId)
                 return false;
+
+            // Validação: Name se informado, min 3
+            if (!string.IsNullOrWhiteSpace(request.Name) && request.Name.Length < 3)
+                throw new ArgumentException("O nome do jogo deve ter pelo menos 3 caracteres.");
+
+            // Validação: CoverImageUrl se informado, obrigatório não vazio
+            if (request.CoverImageUrl != null && string.IsNullOrWhiteSpace(request.CoverImageUrl))
+                throw new ArgumentException("A URL da capa não pode ser vazia se informada.");
+
+            // Validação: Description se informado, min 10
+            if (!string.IsNullOrWhiteSpace(request.Description) && request.Description.Length < 10)
+                throw new ArgumentException("A descrição deve ter pelo menos 10 caracteres se informada.");
+
             _mapper.Map(request, game);
             _repository.Update(game);
             await _repository.SaveChangesAsync();

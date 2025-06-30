@@ -1,15 +1,9 @@
-﻿using AutoMapper;
-using GameLibrary.Api.Models;
-using GameLibrary.Api.DTOs.Auth;
+﻿using GameLibrary.Api.DTOs.Auth;
+using GameLibrary.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using GameLibrary.Api.Data;
+using System;
+using System.Threading.Tasks;
 
 namespace GameLibrary.Api.Controllers
 {
@@ -20,15 +14,11 @@ namespace GameLibrary.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly GameLibrary.Api.Data.GameContext _context;
-        private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public AuthController(GameLibrary.Api.Data.GameContext context, IMapper mapper, IConfiguration configuration)
+        public AuthController(IAuthService authService)
         {
-            _context = context;
-            _mapper = mapper;
-            _configuration = configuration;
+            _authService = authService;
         }
 
         /// <summary>Registra Usuario</summary>
@@ -42,25 +32,15 @@ namespace GameLibrary.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var exists = await _context.Users
-                .AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
-
-            if (exists)
-                return BadRequest("Usuário já existe.");
-
-            var user = _mapper.Map<User>(request);
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var response = new RegisterResponse
+            try
             {
-                Message = "Usuário criado com sucesso!",
-                Token = GenerateToken(user)
-            };
-
-            return Ok(response);
+                var response = await _authService.RegisterAsync(request);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         ///<summary>Realiza o login do usuário</summary>
@@ -76,45 +56,17 @@ namespace GameLibrary.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
-
-            if (user == null)
-                return Unauthorized("Usuário ou senha inválidos.");
-
-            var response = new LoginResponse { 
-                Message = "Login realizado com sucesso!",
-                Token = GenerateToken(user)
-
-            };
-            
-            return Ok(response);
-        }
-
-        private string GenerateToken(User user)
-        {
-            var claims = new[]
+            try
             {
-                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                 new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)
-            );
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                var response = await _authService.LoginAsync(request);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.Contains("inválidos"))
+                    return Unauthorized(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
