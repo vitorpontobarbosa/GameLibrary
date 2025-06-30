@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameLibrary.Api.Services
-{
+{  
     public class AuthService : IAuthService
     {
         private readonly GameContext _context;
