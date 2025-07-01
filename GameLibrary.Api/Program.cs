@@ -78,21 +78,15 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
-
-// ordem correta: autenticação → autorização
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
-
-app.Logger.LogInformation($"Usando porta: {port}");
 
 app.Run();
