@@ -18,7 +18,7 @@ namespace GameLibrary.Api.Services
             _mapper = mapper;
         }
 
-        public async Task<GameResponse> GetByIdAsync(int id, int userId)
+        public async Task<GameResponse?> GetByIdAsync(int id, int userId)
         {
             var game = await _repository.GetByIdAsync(id);
             if (game == null || game.OwnerId != userId)
@@ -40,17 +40,17 @@ namespace GameLibrary.Api.Services
 
         public async Task<GameResponse> CreateAsync(CreateGameRequest request, int userId)
         {
-            // Validação: Name obrigatório, min 3
+            // ValidaÃ§Ã£o: Name obrigatÃ³rio, min 3
             if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length < 3)
-                throw new ArgumentException("O nome do jogo é obrigatório e deve ter pelo menos 3 caracteres.");
+                throw new ArgumentException("O nome do jogo Ã© obrigatÃ³rio e deve ter pelo menos 3 caracteres.");
 
-            // Validação: CoverImageUrl obrigatório
+            // ValidaÃ§Ã£o: CoverImageUrl obrigatÃ³rio
             if (string.IsNullOrWhiteSpace(request.CoverImageUrl))
-                throw new ArgumentException("A URL da capa é obrigatória.");
+                throw new ArgumentException("A URL da capa Ã© obrigatÃ³ria.");
 
-            // Validação: Description obrigatório, min 10
+            // ValidaÃ§Ã£o: Description obrigatÃ³rio, min 10
             if (string.IsNullOrWhiteSpace(request.Description) || request.Description.Length < 10)
-                throw new ArgumentException("A descrição é obrigatória e deve ter pelo menos 10 caracteres.");
+                throw new ArgumentException("A descriÃ§Ã£o Ã© obrigatÃ³ria e deve ter pelo menos 10 caracteres.");
 
             var game = _mapper.Map<Game>(request);
             game.OwnerId = userId;
@@ -65,17 +65,17 @@ namespace GameLibrary.Api.Services
             if (game == null || game.OwnerId != userId)
                 return false;
 
-            // Validação: Name se informado, min 3
+            // ValidaÃ§Ã£o: Name se informado, min 3
             if (!string.IsNullOrWhiteSpace(request.Name) && request.Name.Length < 3)
                 throw new ArgumentException("O nome do jogo deve ter pelo menos 3 caracteres.");
 
-            // Validação: CoverImageUrl se informado, obrigatório não vazio
+            // ValidaÃ§Ã£o: CoverImageUrl se informado, obrigatÃ³rio nÃ£o vazio
             if (request.CoverImageUrl != null && string.IsNullOrWhiteSpace(request.CoverImageUrl))
-                throw new ArgumentException("A URL da capa não pode ser vazia se informada.");
+                throw new ArgumentException("A URL da capa nÃ£o pode ser vazia se informada.");
 
-            // Validação: Description se informado, min 10
+            // ValidaÃ§Ã£o: Description se informado, min 10
             if (!string.IsNullOrWhiteSpace(request.Description) && request.Description.Length < 10)
-                throw new ArgumentException("A descrição deve ter pelo menos 10 caracteres se informada.");
+                throw new ArgumentException("A descriÃ§Ã£o deve ter pelo menos 10 caracteres se informada.");
 
             _mapper.Map(request, game);
             _repository.Update(game);

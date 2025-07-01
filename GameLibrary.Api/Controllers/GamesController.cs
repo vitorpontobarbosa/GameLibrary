@@ -27,7 +27,8 @@ namespace GameLibrary.Api.Controllers
         [HttpGet("{id}", Name = "GetGameById")]
         public async Task<IActionResult> GetGameById(int id)
         {
-            var userId = User.Identity?.IsAuthenticated == true ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int.TryParse(userIdValue, out var userId);
             var game = await _gameService.GetByIdAsync(id, userId);
             if (game == null)
                 return NotFound();
@@ -38,7 +39,8 @@ namespace GameLibrary.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetMyGames()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int.TryParse(userIdValue, out var userId);
             var games = await _gameService.GetMyGamesAsync(userId);
             return Ok(games);
         }
@@ -49,7 +51,8 @@ namespace GameLibrary.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int.TryParse(userIdValue, out var userId);
             var game = await _gameService.CreateAsync(request, userId);
             return CreatedAtRoute("GetGameById", new { id = game.Id }, game);
         }
@@ -60,7 +63,8 @@ namespace GameLibrary.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int.TryParse(userIdValue, out var userId);
             var updated = await _gameService.UpdateAsync(id, request, userId);
             if (!updated)
                 return Forbid();
@@ -71,7 +75,8 @@ namespace GameLibrary.Api.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int.TryParse(userIdValue, out var userId);
             var deleted = await _gameService.DeleteAsync(id, userId);
             if (!deleted)
                 return Forbid();

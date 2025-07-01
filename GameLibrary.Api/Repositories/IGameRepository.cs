@@ -6,7 +6,7 @@ namespace GameLibrary.Api.Repositories
 {
     public interface IGameRepository
     {
-        Task<Game> GetByIdAsync(int id);
+        Task<Game?> GetByIdAsync(int id);
         Task<IEnumerable<Game>> GetAllAsync();
         Task<IEnumerable<Game>> GetByOwnerIdAsync(int ownerId);
         Task AddAsync(Game game);
