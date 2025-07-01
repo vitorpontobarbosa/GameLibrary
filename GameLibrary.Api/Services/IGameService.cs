@@ -6,7 +6,7 @@ namespace GameLibrary.Api.Services
 {
     public interface IGameService
     {
-        Task<GameResponse> GetByIdAsync(int id, int userId);
+        Task<GameResponse?> GetByIdAsync(int id, int userId);
         Task<IEnumerable<GameResponse>> GetAllAsync();
         Task<IEnumerable<GameResponse>> GetMyGamesAsync(int userId);
         Task<GameResponse> CreateAsync(CreateGameRequest request, int userId);

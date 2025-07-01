@@ -14,7 +14,7 @@ namespace GameLibrary.Api.Repositories
             _context = context;
         }
 
-        public async Task<Game> GetByIdAsync(int id)
+        public async Task<Game?> GetByIdAsync(int id)
         {
             return await _context.Games.FindAsync(id);
         }
