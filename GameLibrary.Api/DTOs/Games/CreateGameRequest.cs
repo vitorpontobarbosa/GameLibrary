@@ -4,23 +4,23 @@ namespace GameLibrary.Api.DTOs.Games
 {
     public class CreateGameRequest
     {
-        [Required(ErrorMessage = "O nome do jogo È obrigatÛrio.")]
+        [Required(ErrorMessage = "O nome do jogo √© obrigat√≥rio.")]
         [MinLength(2, ErrorMessage = "O nome deve ter pelo menos 2 caracteres.")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public string? Studio { get; set; }
 
-        [Url(ErrorMessage = "URL da capa inv·lida.")]
+        [Url(ErrorMessage = "URL da capa inv√°lida.")]
         public string? CoverImageUrl { get; set; }
 
-        [Range(0, 1000, ErrorMessage = "O preÁo deve estar entre 0 e 1000.")]
+        [Range(0, 1000, ErrorMessage = "O pre√ßo deve estar entre 0 e 1000.")]
         public decimal? Price { get; set; }
 
-        [Required(ErrorMessage = "A descriÁ„o È obrigatÛria.")]
-        [MinLength(5, ErrorMessage = "A descriÁ„o deve ter pelo menos 5 caracteres.")]
-        public string Description { get; set; }
+        [Required(ErrorMessage = "A descri√ß√£o √© obrigat√≥ria.")]
+        [MinLength(5, ErrorMessage = "A descri√ß√£o deve ter pelo menos 5 caracteres.")]
+        public string? Description { get; set; }
 
-        [Url(ErrorMessage = "Link da Steam inv·lido.")]
-        public string SteamLink { get; set; }
+        [Url(ErrorMessage = "Link da Steam inv√°lido.")]
+        public string SteamLink { get; set; } = string.Empty;
     }
 }

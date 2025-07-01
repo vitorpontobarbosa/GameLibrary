@@ -53,9 +53,9 @@ builder.Services.AddScoped<GameLibrary.Api.Services.IGameService, GameLibrary.Ap
 builder.Services.AddScoped<GameLibrary.Api.Services.IAuthService, GameLibrary.Api.Services.AuthService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var jwtKey = jwtSettings["Key"];
-var jwtIssuer = jwtSettings["Issuer"];
-var jwtAudience = jwtSettings["Audience"];
+var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("Jwt Key not configured");
+var jwtIssuer = jwtSettings["Issuer"] ?? throw new InvalidOperationException("Jwt Issuer not configured");
+var jwtAudience = jwtSettings["Audience"] ?? throw new InvalidOperationException("Jwt Audience not configured");
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
