@@ -10,31 +10,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
+      - name: Restaurar dependências
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+      - name: Build com logs detalhados
+        run: dotnet build --configuration Release --verbosity normal
 
-      - name: Run tests
-        run: dotnet test GameLibrary.Tests/GameLibrary.Tests.csproj --logger trx
+      - name: Publicar
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Publish
-        run: dotnet publish -c Release -o ./publish
+      - name: Listar saída publicada (debug)
+        run: ls -R ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Deploy to Azure Web App
+      - name: Testar (opcional)
+        run: dotnet test --logger "console;verbosity=detailed"
+
+      - name: Verificar variável de porta
+        run: echo "PORT=$PORT"
+
+      - name: Deploy para Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: GameLibrary
-          slot-name: Production
+          app-name: 'GameLibrary'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-          package: ./publish
-          
+          package: ${{env.DOTNET_ROOT}}/myapp
