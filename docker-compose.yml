@@ -1,0 +1,19 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/games.db
+      # Jwt__Key / Jwt__Issuer / Jwt__Audience fall back to appsettings.json if unset.
+      # - Jwt__Key=changeme
+      # - Jwt__Issuer=GameLibrary
+      # - Jwt__Audience=GameLibraryUsers
+    volumes:
+      - gamelibrary-data:/app/data
+
+volumes:
+  gamelibrary-data:
