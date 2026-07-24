@@ -1,0 +1,56 @@
+[
+    {
+        "owner": "jogador1@k6.test",
+        "name": "The Witcher 3: Wild Hunt",
+        "studio": "CD Projekt Red",
+        "coverImageUrl": "https://example.com/covers/witcher3.jpg",
+        "price": 79.9,
+        "description": "RPG de mundo aberto ambientado em um universo de fantasia sombria.",
+        "steamLink": "https://store.steampowered.com/app/292030"
+    },
+    {
+        "owner": "jogador1@k6.test",
+        "name": "Hollow Knight",
+        "studio": "Team Cherry",
+        "coverImageUrl": "https://example.com/covers/hollowknight.jpg",
+        "price": 39.9,
+        "description": "Metroidvania desenhado a mao ambientado no reino subterraneo de Hallownest.",
+        "steamLink": "https://store.steampowered.com/app/367520"
+    },
+    {
+        "owner": "jogador2@k6.test",
+        "name": "Stardew Valley",
+        "studio": "ConcernedApe",
+        "coverImageUrl": "https://example.com/covers/stardewvalley.jpg",
+        "price": 24.9,
+        "description": "Simulador de fazenda onde voce cuida de plantacoes, animais e relacionamentos.",
+        "steamLink": "https://store.steampowered.com/app/413150"
+    },
+    {
+        "owner": "jogador2@k6.test",
+        "name": "Celeste",
+        "studio": "Maddy Makes Games",
+        "coverImageUrl": "https://example.com/covers/celeste.jpg",
+        "price": 34.9,
+        "description": "Plataforma desafiador sobre uma jovem que escala uma montanha cheia de perigos.",
+        "steamLink": "https://store.steampowered.com/app/504230"
+    },
+    {
+        "owner": "jogador3@k6.test",
+        "name": "Portal 2",
+        "studio": "Valve",
+        "coverImageUrl": "https://example.com/covers/portal2.jpg",
+        "price": 29.9,
+        "description": "Jogo de quebra-cabeca em primeira pessoa com portais espaciais.",
+        "steamLink": "https://store.steampowered.com/app/620"
+    },
+    {
+        "owner": "jogador3@k6.test",
+        "name": "Terraria",
+        "studio": "Re-Logic",
+        "coverImageUrl": "https://example.com/covers/terraria.jpg",
+        "price": 19.9,
+        "description": "Jogo de aventura e construcao em mundo 2D gerado proceduralmente.",
+        "steamLink": "https://store.steampowered.com/app/105600"
+    }
+]

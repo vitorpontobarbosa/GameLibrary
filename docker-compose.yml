@@ -15,5 +15,17 @@ services:
     volumes:
       - gamelibrary-data:/app/data
 
+  web:
+    build:
+      context: ./gamelibrary-web
+      dockerfile: Dockerfile
+      args:
+        # Browser-facing URL of the API (baked into the JS bundle at build time).
+        - VITE_API_URL=http://localhost:8080
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+
 volumes:
   gamelibrary-data:

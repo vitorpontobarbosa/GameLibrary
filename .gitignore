@@ -365,3 +365,7 @@ FodyWeavers.xsd
 GameLibrary.Api/games.db
 GameLibrary.Api/games.db-shm
 GameLibrary.Api/games.db-wal
+
+# k6 load test results
+k6/results/*
+!k6/results/.gitkeep

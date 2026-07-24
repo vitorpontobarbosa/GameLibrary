@@ -14,7 +14,10 @@ RUN dotnet publish GameLibrary.Api/GameLibrary.Api.csproj -c Release -o /app/pub
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
-RUN useradd --uid 1000 --create-home appuser \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --uid 1000 --create-home appuser \
     && mkdir -p /app/data \
     && chown -R appuser:appuser /app
 

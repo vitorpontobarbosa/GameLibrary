@@ -1,4 +1,4 @@
-name: Build and Deploy .NET API to Azure
+name: Build and Test .NET API
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  unit-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      - name: Checkout cÃ³digo
         uses: actions/checkout@v3
 
       - name: Configurar .NET
@@ -18,27 +18,28 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restaurar dependências
+      - name: Restaurar dependÃªncias
         run: dotnet restore
 
       - name: Build com logs detalhados
         run: dotnet build --configuration Release --verbosity normal
 
-      - name: Publicar
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Listar saída publicada (debug)
-        run: ls -R ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Testar (opcional)
+      - name: Testes unitÃ¡rios
         run: dotnet test --logger "console;verbosity=detailed"
 
-      - name: Verificar variável de porta
-        run: echo "PORT=$PORT"
+  k6-tests:
+    runs-on: ubuntu-latest
 
-      - name: Deploy para Azure Web App
-        uses: azure/webapps-deploy@v2
+    steps:
+      - name: Checkout cÃ³digo
+        uses: actions/checkout@v3
+
+      - name: Rodar testes k6
+        run: ./scripts/run-k6-tests.sh
+
+      - name: Publicar resultados k6
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          app-name: 'GameLibrary'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-        
+          name: k6-results
+          path: GameLibrary.k6/results/

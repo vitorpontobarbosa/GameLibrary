@@ -10,7 +10,8 @@ namespace GameLibrary.Api.Mappings
         {
             CreateMap<Game, GameResponse>();
             CreateMap<CreateGameRequest, Game>();
-            CreateMap<UpdateGameRequest, Game>();
+            CreateMap<UpdateGameRequest, Game>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Game, GameRequest>();
         }
     }

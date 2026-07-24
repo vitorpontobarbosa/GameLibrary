@@ -1,0 +1,14 @@
+[
+    {
+        "email": "jogador1@k6.test",
+        "password": "senha123"
+    },
+    {
+        "email": "jogador2@k6.test",
+        "password": "senha123"
+    },
+    {
+        "email": "jogador3@k6.test",
+        "password": "senha123"
+    }
+]

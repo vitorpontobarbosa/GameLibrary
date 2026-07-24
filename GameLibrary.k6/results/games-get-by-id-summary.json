@@ -1,0 +1,154 @@
+{
+    "metrics": {
+        "iterations": {
+            "count": 1,
+            "rate": 164.29015481389868
+        },
+        "http_req_waiting": {
+            "avg": 1.5621390000000002,
+            "min": 0.931,
+            "med": 1.684333,
+            "max": 2.071084,
+            "p(90)": 1.9937338,
+            "p(95)": 2.0324089
+        },
+        "http_req_blocked": {
+            "max": 0.502375,
+            "p(90)": 0.4194582,
+            "p(95)": 0.46091659999999995,
+            "avg": 0.19736099999999998,
+            "min": 0.001917,
+            "med": 0.087791
+        },
+        "http_req_tls_handshaking": {
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+        },
+        "http_req_duration{expected_response:true}": {
+            "med": 1.770167,
+            "max": 2.104,
+            "p(90)": 2.0372334000000003,
+            "p(95)": 2.0706167,
+            "avg": 1.6252223333333333,
+            "min": 1.0015
+        },
+        "http_req_failed": {
+            "fails": 3,
+            "passes": 0,
+            "value": 0
+        },
+        "http_req_connecting": {
+            "med": 0.057166,
+            "max": 0.068333,
+            "p(90)": 0.06609960000000001,
+            "p(95)": 0.0672163,
+            "avg": 0.041833,
+            "min": 0
+        },
+        "http_req_sending": {
+            "med": 0.019,
+            "max": 0.042917,
+            "p(90)": 0.0381336,
+            "p(95)": 0.04052529999999999,
+            "avg": 0.024277666666666666,
+            "min": 0.010916
+        },
+        "http_req_receiving": {
+            "avg": 0.03880566666666666,
+            "min": 0.022,
+            "med": 0.042917,
+            "max": 0.0515,
+            "p(90)": 0.0497834,
+            "p(95)": 0.0506417
+        },
+        "http_req_duration": {
+            "min": 1.0015,
+            "med": 1.770167,
+            "max": 2.104,
+            "p(90)": 2.0372334000000003,
+            "p(95)": 2.0706167,
+            "avg": 1.6252223333333333
+        },
+        "data_sent": {
+            "count": 1507,
+            "rate": 247585.26330454534
+        },
+        "iteration_duration": {
+            "p(95)": 1.175458,
+            "avg": 1.175458,
+            "min": 1.175458,
+            "med": 1.175458,
+            "max": 1.175458,
+            "p(90)": 1.175458
+        },
+        "checks": {
+            "fails": 0,
+            "passes": 4,
+            "thresholds": {
+                "rate==1.0": false
+            },
+            "value": 1
+        },
+        "http_reqs": {
+            "count": 3,
+            "rate": 492.8704644416961
+        },
+        "data_received": {
+            "count": 1554,
+            "rate": 255306.90058079857
+        }
+    },
+    "setup_data": {
+        "gameId": 9,
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJqb2dhZG9yMUBrNi50ZXN0IiwiZXhwIjoxNzg0OTIyMjA0LCJpc3MiOiJHYW1lTGlicmFyeSIsImF1ZCI6IkdhbWVMaWJyYXJ5VXNlcnMifQ.sYGRtKnSh2F4qndddOrvR1mb01m6Tu8LgtFxZpLg8Rk"
+    },
+    "root_group": {
+        "checks": {
+            "GET /api/games/{id} retorna 200": {
+                "name": "GET /api/games/{id} retorna 200",
+                "path": "::GET /api/games/{id} retorna 200",
+                "id": "796c2b99b5a63c7f83c345d1c69a0e2a",
+                "passes": 1,
+                "fails": 0
+            },
+            "GET /api/games/{id} retorna o jogo esperado": {
+                "id": "56bc0c123638bcff5d7b818394111d48",
+                "passes": 1,
+                "fails": 0,
+                "name": "GET /api/games/{id} retorna o jogo esperado",
+                "path": "::GET /api/games/{id} retorna o jogo esperado"
+            }
+        },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "login retornou 200": {
+                            "id": "fc3d48fd6983c9131fde18e0079595af",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "login retornou 200",
+                            "path": "::setup::login retornou 200"
+                        },
+                        "jogo de apoio criado com sucesso": {
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "jogo de apoio criado com sucesso",
+                            "path": "::setup::jogo de apoio criado com sucesso",
+                            "id": "70093254c74e8a34e8e989f860a02731"
+                        }
+                    }
+            }
+        }
+    }
+}

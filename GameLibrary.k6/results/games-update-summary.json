@@ -1,0 +1,182 @@
+{
+    "root_group": {
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "login retornou 200": {
+                            "path": "::setup::login retornou 200",
+                            "id": "fc3d48fd6983c9131fde18e0079595af",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "login retornou 200"
+                        },
+                        "jogo de apoio criado com sucesso": {
+                            "fails": 0,
+                            "name": "jogo de apoio criado com sucesso",
+                            "path": "::setup::jogo de apoio criado com sucesso",
+                            "id": "70093254c74e8a34e8e989f860a02731",
+                            "passes": 1
+                        }
+                    }
+            }
+        },
+        "checks": {
+            "PUT /api/games/{id} (payload completo) retorna 204": {
+                "name": "PUT /api/games/{id} (payload completo) retorna 204",
+                "path": "::PUT /api/games/{id} (payload completo) retorna 204",
+                "id": "a4ccb0b2c299a9200a304acd279d3a94",
+                "passes": 1,
+                "fails": 0
+            },
+            "GET apos update retorna 200": {
+                "name": "GET apos update retorna 200",
+                "path": "::GET apos update retorna 200",
+                "id": "638e35c2275a411aac1fd2146936a68c",
+                "passes": 1,
+                "fails": 0
+            },
+            "GET apos update reflete os novos dados": {
+                "passes": 1,
+                "fails": 0,
+                "name": "GET apos update reflete os novos dados",
+                "path": "::GET apos update reflete os novos dados",
+                "id": "ad99a1507a141e7ec70a98ebd07ff9fb"
+            },
+            "PUT /api/games/{id} (payload parcial) retorna 204": {
+                "path": "::PUT /api/games/{id} (payload parcial) retorna 204",
+                "id": "e0f7403ccd363b7d9f62d41514f8f136",
+                "passes": 1,
+                "fails": 0,
+                "name": "PUT /api/games/{id} (payload parcial) retorna 204"
+            },
+            "GET apos update parcial mantem o nome": {
+                "fails": 0,
+                "name": "GET apos update parcial mantem o nome",
+                "path": "::GET apos update parcial mantem o nome",
+                "id": "98489ed1ed529e51a4f07cc3fa38fc90",
+                "passes": 1
+            },
+            "GET apos update parcial aplica o novo preco": {
+                "name": "GET apos update parcial aplica o novo preco",
+                "path": "::GET apos update parcial aplica o novo preco",
+                "id": "721f78d7dca3038db454bf984359bc28",
+                "passes": 1,
+                "fails": 0
+            }
+        },
+        "name": ""
+    },
+    "metrics": {
+        "http_req_connecting": {
+            "avg": 0.023298666666666665,
+            "min": 0,
+            "med": 0,
+            "max": 0.078,
+            "p(90)": 0.069896,
+            "p(95)": 0.073948
+        },
+        "iterations": {
+            "count": 1,
+            "rate": 52.31744572836688
+        },
+        "http_req_duration": {
+            "max": 8.40825,
+            "p(90)": 5.3276045000000005,
+            "p(95)": 6.867927249999998,
+            "avg": 2.8663125,
+            "min": 0.981625,
+            "med": 2.0754165
+        },
+        "http_req_tls_handshaking": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+        },
+        "checks": {
+            "passes": 8,
+            "fails": 0,
+            "thresholds": {
+                "rate==1.0": false
+            },
+            "value": 1
+        },
+        "http_req_receiving": {
+            "min": 0.025292,
+            "med": 0.054104,
+            "max": 0.651,
+            "p(90)": 0.3640000000000001,
+            "p(95)": 0.5075,
+            "avg": 0.148625
+        },
+        "http_reqs": {
+            "count": 6,
+            "rate": 313.9046743702013
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(95)": 6.867927249999998,
+            "avg": 2.8663125,
+            "min": 0.981625,
+            "med": 2.0754165,
+            "max": 8.40825,
+            "p(90)": 5.3276045000000005
+        },
+        "http_req_sending": {
+            "med": 0.009875,
+            "max": 0.031833,
+            "p(90)": 0.0287085,
+            "p(95)": 0.03027075,
+            "avg": 0.0153125,
+            "min": 0.006125
+        },
+        "data_sent": {
+            "count": 3423,
+            "rate": 179082.61672819982
+        },
+        "http_req_blocked": {
+            "max": 0.360625,
+            "p(90)": 0.23089600000000002,
+            "p(95)": 0.2957604999999999,
+            "avg": 0.0784515,
+            "min": 0.00175,
+            "med": 0.0025624999999999997
+        },
+        "http_req_failed": {
+            "fails": 6,
+            "passes": 0,
+            "value": 0
+        },
+        "http_req_waiting": {
+            "p(90)": 5.2482915000000006,
+            "p(95)": 6.792478749999998,
+            "avg": 2.702375,
+            "min": 0.950208,
+            "med": 1.7145834999999998,
+            "max": 8.336666
+        },
+        "data_received": {
+            "rate": 117504.983105912,
+            "count": 2246
+        },
+        "iteration_duration": {
+            "p(95)": 13.186084,
+            "avg": 13.186084,
+            "min": 13.186084,
+            "med": 13.186084,
+            "max": 13.186084,
+            "p(90)": 13.186084
+        }
+    },
+    "setup_data": {
+        "gameId": 10,
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJqb2dhZG9yMUBrNi50ZXN0IiwiZXhwIjoxNzg0OTIyMjA0LCJpc3MiOiJHYW1lTGlicmFyeSIsImF1ZCI6IkdhbWVMaWJyYXJ5VXNlcnMifQ.sYGRtKnSh2F4qndddOrvR1mb01m6Tu8LgtFxZpLg8Rk"
+    }
+}

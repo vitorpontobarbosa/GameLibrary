@@ -47,6 +47,19 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<GameLibrary.Api.Data.GameContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+var corsAllowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins(corsAllowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<GameLibrary.Api.Repositories.IGameRepository, GameLibrary.Api.Repositories.GameRepository>();
 builder.Services.AddScoped<GameLibrary.Api.Services.IGameService, GameLibrary.Api.Services.GameService>();
@@ -91,6 +104,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
