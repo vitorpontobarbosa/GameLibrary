@@ -35,14 +35,19 @@ export function GameForm({ initialValues, submitLabel, onSubmit }: GameFormProps
     }
 
     return (
-        <form className="game-form" onSubmit={handleSubmit}>
-            {error && <p className="form-error">{error}</p>}
+        <form className="game-form" onSubmit={handleSubmit} data-cy="game-form">
+            {error && (
+                <p className="form-error" data-cy="game-form-error">
+                    {error}
+                </p>
+            )}
 
             <label>
                 Nome
                 <input
                     required
                     minLength={2}
+                    data-cy="game-name"
                     value={values.name}
                     onChange={(e) => setValues({ ...values, name: e.target.value })}
                 />
@@ -51,6 +56,7 @@ export function GameForm({ initialValues, submitLabel, onSubmit }: GameFormProps
             <label>
                 Estúdio
                 <input
+                    data-cy="game-studio"
                     value={values.studio ?? ''}
                     onChange={(e) => setValues({ ...values, studio: e.target.value })}
                 />
@@ -61,6 +67,7 @@ export function GameForm({ initialValues, submitLabel, onSubmit }: GameFormProps
                 <input
                     type="url"
                     required
+                    data-cy="game-cover"
                     value={values.coverImageUrl ?? ''}
                     onChange={(e) => setValues({ ...values, coverImageUrl: e.target.value })}
                 />
@@ -73,6 +80,7 @@ export function GameForm({ initialValues, submitLabel, onSubmit }: GameFormProps
                     min={0}
                     max={1000}
                     step="0.01"
+                    data-cy="game-price"
                     value={values.price ?? ''}
                     onChange={(e) =>
                         setValues({ ...values, price: e.target.value === '' ? undefined : Number(e.target.value) })
@@ -85,6 +93,7 @@ export function GameForm({ initialValues, submitLabel, onSubmit }: GameFormProps
                 <textarea
                     required
                     minLength={5}
+                    data-cy="game-description"
                     value={values.description}
                     onChange={(e) => setValues({ ...values, description: e.target.value })}
                 />
@@ -95,12 +104,13 @@ export function GameForm({ initialValues, submitLabel, onSubmit }: GameFormProps
                 <input
                     type="url"
                     required
+                    data-cy="game-steamlink"
                     value={values.steamLink}
                     onChange={(e) => setValues({ ...values, steamLink: e.target.value })}
                 />
             </label>
 
-            <button type="submit" disabled={submitting}>
+            <button type="submit" data-cy="game-submit" disabled={submitting}>
                 {submitting ? 'Salvando...' : submitLabel}
             </button>
         </form>

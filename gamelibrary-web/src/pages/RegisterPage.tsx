@@ -28,12 +28,17 @@ export function RegisterPage() {
         <div className="auth-page">
             <h1>Criar conta</h1>
             <form onSubmit={handleSubmit}>
-                {error && <p className="form-error">{error}</p>}
+                {error && (
+                    <p className="form-error" data-cy="register-error">
+                        {error}
+                    </p>
+                )}
                 <label>
                     E-mail
                     <input
                         type="email"
                         required
+                        data-cy="register-email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -44,11 +49,12 @@ export function RegisterPage() {
                         type="password"
                         required
                         minLength={6}
+                        data-cy="register-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </label>
-                <button type="submit" disabled={submitting}>
+                <button type="submit" data-cy="register-submit" disabled={submitting}>
                     {submitting ? 'Criando...' : 'Criar conta'}
                 </button>
             </form>

@@ -34,11 +34,17 @@ export function MyGamesPage() {
     if (loading) return <p className="status-message">Carregando seus jogos...</p>;
 
     return (
-        <div className="page">
+        <div className="page" data-cy="my-games-page">
             <h1>Meus jogos</h1>
-            {error && <p className="form-error">{error}</p>}
+            {error && (
+                <p className="form-error" data-cy="my-games-error">
+                    {error}
+                </p>
+            )}
             {games.length === 0 ? (
-                <p className="status-message">Você ainda não cadastrou nenhum jogo.</p>
+                <p className="status-message" data-cy="my-games-empty">
+                    Você ainda não cadastrou nenhum jogo.
+                </p>
             ) : (
                 <div className="games-grid">
                     {games.map((game) => (

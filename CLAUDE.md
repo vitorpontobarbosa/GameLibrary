@@ -39,6 +39,11 @@ npm run dev              # Vite dev server, http://localhost:5173, needs VITE_AP
 npm run build             # tsc -b && vite build -> dist/
 npm run lint               # oxlint
 
+# Cypress e2e tests (gamelibrary-web/cypress) — needs api+web already running (e.g. `docker compose up -d`)
+cd gamelibrary-web
+npm run cypress:open     # interactive runner
+npm run e2e                # headless run, CYPRESS_BASE_URL/CYPRESS_API_URL default to :3000/:8080
+
 # k6 load tests: fresh DB up, seed, run, save results, teardown — all in one shot
 ./scripts/run-k6-tests.sh
 # run a single test file instead of everything in GameLibrary.k6/tests/
@@ -95,6 +100,12 @@ React 19 + TypeScript SPA scaffolded with Vite, `react-router-dom` for routing. 
 
 `VITE_API_URL` must point somewhere the **browser** can reach (not a Docker service name) — see the CORS note above for why the API needs `Cors:AllowedOrigins` to include whatever origin this ends up serving from.
 
+### Cypress e2e tests (`gamelibrary-web/cypress/`)
+
+Page Object Model: `cypress/pages/*.ts` (one class per page/section — `LoginPage`, `RegisterPage`, `GamesListPage`, `MyGamesPage`, `GameFormPage`, `NavBar`) expose selector/interaction methods only; assertions live in the specs (`cypress/e2e/auth.cy.ts`, `cypress/e2e/games.cy.ts`), not in the page objects. Selectors use `data-cy` attributes added throughout `src/` (e.g. `[data-cy=game-card]`, `[data-cy=login-submit]`) rather than CSS classes or text, so they don't break when styling/copy changes.
+
+Tests don't rely on any seeded state: `cypress/support/commands.ts` adds `cy.apiRegister()` (registers a unique user directly via `POST /api/auth/register`, bypassing the UI) and `cy.loginAs(user)` (writes the JWT to `localStorage` under the same key `AuthContext` uses, then visits `/` so the app picks it up) for fast, isolated test setup; `cy.apiCreateGame(user, overrides)` seeds a game via the API when a test needs one to already exist (edit/delete specs). `cypress.config.ts` reads `CYPRESS_BASE_URL` (default `http://localhost:3000`) and `CYPRESS_API_URL` (default `http://localhost:8080`, exposed as `Cypress.env('apiUrl')`).
+
 ## Docker
 
 `Dockerfile` (API) is a multi-stage build (SDK image publishes `GameLibrary.Api`, ASP.NET runtime image serves it) running as a non-root user, listening on `PORT` (default 8080, same variable `Program.cs` already reads). `gamelibrary-web/Dockerfile` is a separate multi-stage build: `npm run build` in a `node` image, then the static `dist/` is served by `nginx` (`gamelibrary-web/nginx.conf` adds an SPA fallback: unknown paths serve `index.html` so client-side routing works on refresh/deep links). `VITE_API_URL` is a **build arg** — baked into the JS bundle at build time, not read at container runtime.
@@ -119,9 +130,15 @@ React 19 + TypeScript SPA scaffolded with Vite, `react-router-dom` for routing. 
 
 Note: a failed `check()` in k6 does **not** make the run exit non-zero by itself — only `thresholds` do. Add thresholds to test files if a failing check should fail the script/CI.
 
-## Deployment
+## CI (`.github/workflows/master_GameLibrary.yml`)
 
-`.github/workflows/master_GameLibrary.yml` builds, tests, publishes, and deploys to an Azure Web App named `GameLibrary` on every push to `master`, using the `AZUREAPPSERVICE_PUBLISHPROFILE` secret. This is a non-containerized (`dotnet publish`) deploy, independent of the Dockerfile.
+Runs on every push to `master`, three parallel-ish jobs (there is currently no deploy step — this workflow is the test gate, not a deploy pipeline):
+
+- **`unit-tests`** — `dotnet restore`/`build`/`test` against `GameLibrary.sln`.
+- **`k6-tests`** — runs `./scripts/run-k6-tests.sh` (see above), uploads `GameLibrary.k6/results/` as an artifact regardless of outcome.
+- **`cypress-tests`** (`needs: unit-tests`) — `docker compose up -d --build` (api + web), polls both with `curl` until ready, then `npm ci` + `npx cypress run` in `gamelibrary-web` against `http://localhost:3000`/`:8080`. Uploads `gamelibrary-web/cypress/screenshots/` on failure; always tears the stack down with `docker compose down -v`.
+
+If a deploy job is added later, gate it with `needs: [unit-tests, k6-tests, cypress-tests]` so it only runs once all three pass.
 
 ## Notes
 

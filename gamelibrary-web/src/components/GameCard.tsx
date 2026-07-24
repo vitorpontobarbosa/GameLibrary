@@ -8,7 +8,7 @@ interface GameCardProps {
 
 export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
     return (
-        <article className="game-card">
+        <article className="game-card" data-cy="game-card" data-cy-name={game.name}>
             {game.coverImageUrl && (
                 <img
                     src={game.coverImageUrl}
@@ -20,7 +20,7 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
                 />
             )}
             <div className="game-card-body">
-                <h3>{game.name}</h3>
+                <h3 data-cy="game-card-name">{game.name}</h3>
                 {game.studio && <p className="game-card-studio">{game.studio}</p>}
                 <p className="game-card-description">{game.description}</p>
                 <div className="game-card-meta">
@@ -34,12 +34,17 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
                 {(onEdit || onDelete) && (
                     <div className="game-card-actions">
                         {onEdit && (
-                            <button type="button" onClick={() => onEdit(game)}>
+                            <button type="button" data-cy="game-card-edit" onClick={() => onEdit(game)}>
                                 Editar
                             </button>
                         )}
                         {onDelete && (
-                            <button type="button" className="danger" onClick={() => onDelete(game)}>
+                            <button
+                                type="button"
+                                className="danger"
+                                data-cy="game-card-delete"
+                                onClick={() => onDelete(game)}
+                            >
                                 Excluir
                             </button>
                         )}

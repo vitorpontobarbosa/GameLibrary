@@ -28,12 +28,17 @@ export function LoginPage() {
         <div className="auth-page">
             <h1>Entrar</h1>
             <form onSubmit={handleSubmit}>
-                {error && <p className="form-error">{error}</p>}
+                {error && (
+                    <p className="form-error" data-cy="login-error">
+                        {error}
+                    </p>
+                )}
                 <label>
                     E-mail
                     <input
                         type="email"
                         required
+                        data-cy="login-email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -44,11 +49,12 @@ export function LoginPage() {
                         type="password"
                         required
                         minLength={6}
+                        data-cy="login-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </label>
-                <button type="submit" disabled={submitting}>
+                <button type="submit" data-cy="login-submit" disabled={submitting}>
                     {submitting ? 'Entrando...' : 'Entrar'}
                 </button>
             </form>

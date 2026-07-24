@@ -19,10 +19,12 @@ export function GamesListPage() {
     if (error) return <p className="status-message form-error">{error}</p>;
 
     return (
-        <div className="page">
+        <div className="page" data-cy="games-list-page">
             <h1>Todos os jogos</h1>
             {games.length === 0 ? (
-                <p className="status-message">Nenhum jogo cadastrado ainda.</p>
+                <p className="status-message" data-cy="games-empty">
+                    Nenhum jogo cadastrado ainda.
+                </p>
             ) : (
                 <div className="games-grid">
                     {games.map((game) => (
