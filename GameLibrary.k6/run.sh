@@ -3,6 +3,13 @@ set -e
 
 mkdir -p /results
 
+# Clear stale outputs from prior runs. Deleting only needs write access to
+# the directory (not the file itself), so this is safe even if leftover
+# files were created by a differently-uid'd k6 image and can't be
+# overwritten in place (permission denied), which also breaks the
+# end-of-test summary since it depends on the --out stream succeeding.
+rm -f /results/*-summary.json /results/*-raw.json.gz
+
 if [ -f /scripts/seed.js ]; then
     echo "==> Seeding data (seed.js)"
     k6 run /scripts/seed.js
