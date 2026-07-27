@@ -41,6 +41,15 @@ class GameFormPage {
         return cy.get('[data-cy=game-submit]');
     }
 
+    existingGameSelect() {
+        return cy.get('[data-cy=game-existing-select]');
+    }
+
+    selectExistingGame(name: string) {
+        this.existingGameSelect().select(name);
+        return this;
+    }
+
     errorMessage() {
         return cy.get('[data-cy=game-form-error]');
     }

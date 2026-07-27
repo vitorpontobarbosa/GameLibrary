@@ -49,6 +49,17 @@ Cypress.Commands.add('apiCreateGame', (user: ApiUser, overrides = {}) => {
         .then((res) => res.body);
 });
 
+Cypress.Commands.add('apiAddToCollection', (user: ApiUser, gameId: number, pricePaid?: number) => {
+    return cy
+        .request({
+            method: 'POST',
+            url: `${Cypress.env('apiUrl')}/api/games/${gameId}/collection`,
+            headers: { Authorization: `Bearer ${user.token}` },
+            body: { pricePaid },
+        })
+        .then((res) => res.body);
+});
+
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
@@ -56,6 +67,11 @@ declare global {
             apiRegister(emailPrefix?: string): Chainable<ApiUser>;
             loginAs(user: ApiUser): Chainable<void>;
             apiCreateGame(user: ApiUser, overrides?: Record<string, unknown>): Chainable<Record<string, unknown>>;
+            apiAddToCollection(
+                user: ApiUser,
+                gameId: number,
+                pricePaid?: number
+            ): Chainable<Record<string, unknown>>;
         }
     }
 }

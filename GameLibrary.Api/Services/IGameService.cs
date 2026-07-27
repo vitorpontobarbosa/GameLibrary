@@ -6,11 +6,12 @@ namespace GameLibrary.Api.Services
 {
     public interface IGameService
     {
-        Task<GameResponse?> GetByIdAsync(int id, int userId);
+        Task<GameDetailResponse?> GetByIdAsync(int id);
         Task<IEnumerable<GameResponse>> GetAllAsync();
-        Task<IEnumerable<GameResponse>> GetMyGamesAsync(int userId);
+        Task<IEnumerable<MyGameResponse>> GetMyGamesAsync(int userId);
         Task<GameResponse> CreateAsync(CreateGameRequest request, int userId);
         Task<bool> UpdateAsync(int id, UpdateGameRequest request, int userId);
         Task<bool> DeleteAsync(int id, int userId);
+        Task<GameResponse> AddToCollectionAsync(int gameId, AddToCollectionRequest request, int userId);
     }
 }

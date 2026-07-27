@@ -32,11 +32,13 @@ export function setup() {
 }
 
 export default function (data) {
-    const res = getById(data.gameId, data.token);
+    const res = getById(data.gameId);
 
     check(res, {
         'GET /api/games/{id} retorna 200': (r) => r.status === 200,
         'GET /api/games/{id} retorna o jogo esperado': (r) =>
             r.json('name') === 'Jogo criado no teste de GET /api/games/{id}',
+        'GET /api/games/{id} eh publico e retorna os donos do jogo': (r) =>
+            r.json('owners').length === 1 && r.json('owners.0.email') === 'jogador1@k6.test',
     });
 }

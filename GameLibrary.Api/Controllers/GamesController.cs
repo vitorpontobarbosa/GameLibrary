@@ -1,7 +1,9 @@
-﻿using GameLibrary.Api.DTOs.Games;
+using GameLibrary.Api.DTOs.Games;
 using GameLibrary.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace GameLibrary.Api.Controllers
@@ -27,9 +29,7 @@ namespace GameLibrary.Api.Controllers
         [HttpGet("{id}", Name = "GetGameById")]
         public async Task<IActionResult> GetGameById(int id)
         {
-            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            int.TryParse(userIdValue, out var userId);
-            var game = await _gameService.GetByIdAsync(id, userId);
+            var game = await _gameService.GetByIdAsync(id);
             if (game == null)
                 return NotFound();
             return Ok(game);
@@ -53,8 +53,38 @@ namespace GameLibrary.Api.Controllers
                 return BadRequest(ModelState);
             var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int.TryParse(userIdValue, out var userId);
-            var game = await _gameService.CreateAsync(request, userId);
-            return CreatedAtRoute("GetGameById", new { id = game.Id }, game);
+            try
+            {
+                var game = await _gameService.CreateAsync(request, userId);
+                return CreatedAtRoute("GetGameById", new { id = game.Id }, game);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("{id}/collection")]
+        [Authorize]
+        public async Task<IActionResult> AddToCollection(int id, [FromBody] AddToCollectionRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int.TryParse(userIdValue, out var userId);
+            try
+            {
+                var game = await _gameService.AddToCollectionAsync(id, request, userId);
+                return Ok(game);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -65,10 +95,17 @@ namespace GameLibrary.Api.Controllers
                 return BadRequest(ModelState);
             var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int.TryParse(userIdValue, out var userId);
-            var updated = await _gameService.UpdateAsync(id, request, userId);
-            if (!updated)
-                return Forbid();
-            return NoContent();
+            try
+            {
+                var updated = await _gameService.UpdateAsync(id, request, userId);
+                if (!updated)
+                    return Forbid();
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]

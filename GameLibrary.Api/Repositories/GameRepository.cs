@@ -2,6 +2,7 @@ using GameLibrary.Api.Data;
 using GameLibrary.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameLibrary.Api.Repositories
@@ -24,11 +25,6 @@ namespace GameLibrary.Api.Repositories
             return await _context.Games.ToListAsync();
         }
 
-        public async Task<IEnumerable<Game>> GetByOwnerIdAsync(int ownerId)
-        {
-            return await _context.Games.Where(g => g.OwnerId == ownerId).ToListAsync();
-        }
-
         public async Task AddAsync(Game game)
         {
             await _context.Games.AddAsync(game);
@@ -47,6 +43,43 @@ namespace GameLibrary.Api.Repositories
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<GameOwnership?> GetOwnershipAsync(int gameId, int userId)
+        {
+            return await _context.GameOwnerships
+                .FirstOrDefaultAsync(o => o.GameId == gameId && o.UserId == userId);
+        }
+
+        public async Task<IEnumerable<GameOwnership>> GetOwnersByGameIdAsync(int gameId)
+        {
+            return await _context.GameOwnerships
+                .Where(o => o.GameId == gameId)
+                .Include(o => o.User)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<GameOwnership>> GetOwnedGamesByUserIdAsync(int userId)
+        {
+            return await _context.GameOwnerships
+                .Where(o => o.UserId == userId)
+                .Include(o => o.Game)
+                .ToListAsync();
+        }
+
+        public async Task AddOwnershipAsync(GameOwnership ownership)
+        {
+            await _context.GameOwnerships.AddAsync(ownership);
+        }
+
+        public void RemoveOwnership(GameOwnership ownership)
+        {
+            _context.GameOwnerships.Remove(ownership);
+        }
+
+        public async Task<int> CountOwnersAsync(int gameId)
+        {
+            return await _context.GameOwnerships.CountAsync(o => o.GameId == gameId);
         }
     }
 }

@@ -6,7 +6,22 @@ export interface Game {
     price?: number | null;
     description: string;
     steamLink: string;
-    ownerId: number;
+    createdByUserId: number;
+}
+
+export interface GameOwner {
+    userId: number;
+    email: string;
+    pricePaid?: number | null;
+    addedAt: string;
+}
+
+export interface GameDetail extends Game {
+    owners: GameOwner[];
+}
+
+export interface MyGame extends Game {
+    pricePaid?: number | null;
 }
 
 export interface CreateGameRequest {
@@ -19,6 +34,10 @@ export interface CreateGameRequest {
 }
 
 export type UpdateGameRequest = Partial<CreateGameRequest>;
+
+export interface AddToCollectionRequest {
+    pricePaid?: number | null;
+}
 
 export interface LoginRequest {
     email: string;

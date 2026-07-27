@@ -11,6 +11,6 @@ namespace GameLibrary.Api.DTOs.Games
         public decimal? Price { get; set; }
         public string Description { get; set; } = string.Empty;
         public string SteamLink { get; set; } = string.Empty;
-        public int OwnerId { get; set; }
+        public int CreatedByUserId { get; set; }
     }
 }

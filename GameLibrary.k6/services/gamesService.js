@@ -37,3 +37,9 @@ export function remove(id, token) {
         headers: jsonHeaders(token),
     });
 }
+
+export function addToCollection(id, payload, token) {
+    return http.post(`${BASE_URL}/api/games/${id}/collection`, JSON.stringify(payload), {
+        headers: jsonHeaders(token),
+    });
+}

@@ -9,6 +9,8 @@ namespace GameLibrary.Api.Mappings
         public GameProfile()
         {
             CreateMap<Game, GameResponse>();
+            CreateMap<Game, GameDetailResponse>();
+            CreateMap<Game, MyGameResponse>();
             CreateMap<CreateGameRequest, Game>();
             CreateMap<UpdateGameRequest, Game>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));

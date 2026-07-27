@@ -22,7 +22,7 @@ export default function (data) {
     check(res, {
         'GET /api/games/me retorna 200': (r) => r.status === 200,
         'GET /api/games/me retorna os jogos seedados do usuario': (r) => r.json().length >= 2,
-        'GET /api/games/me so retorna jogos do proprio dono': (r) =>
-            r.json().every((game) => typeof game.ownerId === 'number'),
+        'GET /api/games/me retorna o preco pago por cada jogo': (r) =>
+            r.json().every((game) => typeof game.pricePaid === 'number'),
     });
 }

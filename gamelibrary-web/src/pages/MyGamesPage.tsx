@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMyGames, remove } from '../api/games';
-import type { Game } from '../types';
+import type { Game, MyGame } from '../types';
 import { GameCard } from '../components/GameCard';
 import { useAuth } from '../context/AuthContext';
 
 export function MyGamesPage() {
     const { token } = useAuth();
     const navigate = useNavigate();
-    const [games, setGames] = useState<Game[]>([]);
+    const [games, setGames] = useState<MyGame[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

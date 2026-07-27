@@ -15,6 +15,11 @@ class GamesListPage {
     cardByName(name: string) {
         return cy.get(`[data-cy=game-card][data-cy-name="${name}"]`);
     }
+
+    openGame(name: string) {
+        this.cardByName(name).find('[data-cy=game-card-link]').click();
+        return this;
+    }
 }
 
 export const gamesListPage = new GamesListPage();

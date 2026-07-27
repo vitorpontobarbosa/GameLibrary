@@ -54,6 +54,32 @@ describe('Jogos', () => {
         });
     });
 
+    it('herda o link da Steam e a imagem de capa ao adicionar um jogo já existente pela tela de "Novo jogo"', function () {
+        cy.apiRegister('games-creator').then((creator) => {
+            const name = `Jogo Compartilhado Form ${Date.now()}`;
+            cy.apiCreateGame(creator, {
+                name,
+                coverImageUrl: 'https://example.com/covers/herdado.jpg',
+                steamLink: 'https://store.steampowered.com/app/999999',
+                price: 30,
+            }).then(() => {
+                gameFormPage.visitNew();
+                gameFormPage.selectExistingGame(name);
+
+                gameFormPage.coverInput().should('have.value', 'https://example.com/covers/herdado.jpg').and('be.disabled');
+                gameFormPage.steamLinkInput().should('have.value', 'https://store.steampowered.com/app/999999').and('be.disabled');
+                gameFormPage.priceInput().should('be.enabled');
+
+                gameFormPage.priceInput().clear().type('12.5');
+                gameFormPage.submitButton().click();
+
+                cy.url().should('include', '/games/');
+                myGamesPage.visit();
+                myGamesPage.cardByName(name).should('be.visible');
+            });
+        });
+    });
+
     it('exclui um jogo', function () {
         const user = this.user as ApiUser;
         const name = `Jogo Para Excluir ${Date.now()}`;

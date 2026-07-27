@@ -8,6 +8,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { MyGamesPage } from './pages/MyGamesPage';
 import { GameCreatePage } from './pages/GameCreatePage';
 import { GameEditPage } from './pages/GameEditPage';
+import { GameDetailPage } from './pages/GameDetailPage';
 
 function App() {
     return (
@@ -43,6 +44,7 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
+                        <Route path="/games/:id" element={<GameDetailPage />} />
                     </Routes>
                 </main>
             </AuthProvider>
